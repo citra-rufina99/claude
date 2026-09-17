@@ -153,12 +153,14 @@ Buka **PowerShell** (tekan tombol Windows, ketik `powershell`, Enter), lalu:
 
 ```powershell
 cd $env:USERPROFILE\Downloads
-git clone https://github.com/citra-rufina99/claude.git claude-ga4-setup
+git clone -b claude/ga4-mcp-server-setup-spplyv https://github.com/citra-rufina99/claude.git claude-ga4-setup
 cd claude-ga4-setup\ga4-mcp-setup
 ```
 
 **Belum punya Git?** Tidak masalah — download manual:
-1. Buka <https://github.com/citra-rufina99/claude>
+1. Buka <https://github.com/citra-rufina99/claude/tree/claude/ga4-mcp-server-setup-spplyv>
+   (pastikan dropdown branch menunjuk ke `claude/ga4-mcp-server-setup-spplyv`,
+   bukan `main` — file-nya belum ada di `main`)
 2. Tombol hijau **Code** → **Download ZIP**
 3. Extract, lalu buka folder `ga4-mcp-setup` di dalamnya
 4. Klik kanan di area kosong folder → **Open in Terminal**
