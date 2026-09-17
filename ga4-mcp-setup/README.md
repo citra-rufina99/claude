@@ -90,44 +90,61 @@ Di tiap halaman, klik tombol biru **ENABLE**, tunggu sampai berubah jadi "API en
 
 > Kalau tombolnya tulisan **MANAGE**, berarti sudah aktif. Lanjut saja.
 
-### A3. Setup OAuth consent screen
+### A3. Setup Google Auth Platform (dulu bernama "OAuth consent screen")
 
-Google mewajibkan ini sebelum bisa bikin credential.
+> 🔄 **Tampilan Google berubah.** Menu **OAuth consent screen** sudah tidak ada.
+> Sekarang namanya **Google Auth Platform**, dengan tab
+> *Branding / Audience / Data Access / Clients*. Kalau kamu menemukan tutorial
+> lama yang menyuruh cari "OAuth consent screen", itu sudah usang.
 
-1. Buka <https://console.cloud.google.com/apis/credentials/consent>
-2. User Type: pilih **External** → **CREATE**
-   - *Kalau kamu pakai Google Workspace kantor, pilihan **Internal** juga boleh
-     dan justru lebih simpel — langkah A3.4 soal Test users bisa dilewati.*
-3. Isi form:
+1. Buka <https://console.cloud.google.com/auth/overview>
+2. Klik tombol **Get started**
+3. Isi wizard-nya, empat layar:
 
-   | Field | Isi |
+   | Layar | Isi |
    |---|---|
-   | App name | `Claude GA4` |
-   | User support email | email kamu |
-   | Developer contact email | email kamu |
+   | App Information | App name `Claude GA4`, User support email → email kamu |
+   | Audience | pilih **External** |
+   | Contact Information | email kamu |
+   | Finish | centang persetujuan **Google API Services: User Data Policy** |
 
-   Field lain boleh dikosongkan. → **SAVE AND CONTINUE**
-4. Halaman **Scopes** → langsung **SAVE AND CONTINUE** (jangan tambah apa-apa;
-   scope diminta otomatis oleh server saat login)
-5. Halaman **Test users** → klik **+ ADD USERS** → **masukkan email kamu sendiri**
-   → **SAVE AND CONTINUE**
+   → klik **Create**
 
-> ⚠️ **Langkah A3.5 wajib.** Kalau email kamu tidak terdaftar sebagai test user,
-> nanti saat login muncul error `403: access_denied` dan kamu akan bingung kenapa.
+   *Pakai Google Workspace kantor? **Internal** juga boleh dan lebih simpel —
+   langkah A3.4 soal Test users bisa dilewati sepenuhnya.*
+
+4. **Tambahkan dirimu sebagai test user.** Buka tab **Audience**
+   (<https://console.cloud.google.com/auth/audience>), scroll ke bagian
+   **Test users** → **+ Add users** → masukkan **email kamu sendiri** → **Save**
+
+> ⚠️ **Langkah A3.4 wajib dan tidak ada di dalam wizard** — ini bagian yang
+> paling sering terlewat, karena wizard-nya selesai tanpa pernah menyinggung
+> test users. Kalau emailmu tidak terdaftar di situ, saat login nanti muncul
+> `403: access_denied` tanpa petunjuk apa pun soal penyebabnya.
+
+> 💡 Tidak perlu menyentuh tab **Data Access** / scopes. Server meminta
+> scope yang dibutuhkannya sendiri saat login.
 
 ### A4. Bikin OAuth Client ID
 
-1. Buka <https://console.cloud.google.com/apis/credentials>
-2. Klik **+ CREATE CREDENTIALS** (atas) → pilih **OAuth client ID**
+1. Buka tab **Clients** → <https://console.cloud.google.com/auth/clients>
+2. Klik **+ Create client**
 3. **Application type: pilih `Desktop app`** ← ini bagian paling krusial
-4. Name: `claude-desktop` → **CREATE**
-5. Muncul popup → klik **DOWNLOAD JSON**
+4. Name: `claude-desktop` → **Create**
+5. Muncul popup → klik **Download JSON**
+   (kalau popup-nya terlanjur tertutup: klik ikon download ⬇️ di baris client
+   itu pada daftar Clients)
 6. Filenya bernama panjang seperti:
    `client_secret_138737274875-a1b2c3.apps.googleusercontent.com.json`
 
+> Halaman lama **APIs & Services → Credentials → + CREATE CREDENTIALS →
+> OAuth client ID** masih berfungsi dan mengarah ke form yang sama, kalau
+> kamu lebih hafal jalur itu.
+
 > ❌ **Jangan pilih "Web application".** OAuth flow server ini membuka browser
-> lokal di `localhost`, yang hanya diizinkan untuk tipe Desktop app.
-> Kalau salah, `install.ps1` akan mendeteksinya dan memberitahu kamu.
+> lokal di `localhost` dengan port acak, yang hanya diizinkan untuk tipe
+> Desktop app. Kalau salah, `install.ps1` akan mendeteksinya dan berhenti
+> dengan pesan yang jelas.
 >
 > ❌ **Jangan pilih "Service account".** Itu mekanisme login yang berbeda dan
 > tidak didukung server ini.
@@ -244,7 +261,8 @@ Cek berurutan:
 
 ### `403: access_denied` saat login Google
 
-Email kamu belum terdaftar sebagai **Test user**. Balik ke langkah **A3.5**.
+Email kamu belum terdaftar sebagai **Test user**. Balik ke langkah **A3.4**
+(tab **Audience** di Google Auth Platform, bukan di dalam wizard Get started).
 
 ### `GOOGLE_ANALYTICS_OAUTH_CONFIG_PATH environment variable not set`
 
